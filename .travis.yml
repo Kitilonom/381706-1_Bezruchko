@@ -1,0 +1,14 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+before_script:
+  - mkdir ../build
+  - cd ../build
+script:
+  - cmake ../381706-1_Bezruchko
+  - make -j
+  - cd ./bin/
+  - ./381706-1_Bezruchko
+notifications:
+  email: false
