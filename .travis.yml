@@ -8,7 +8,7 @@ before_script:
 script:
   - cmake ../381706-1_Bezruchko
   - make -j
-  - cd ./bin/
-  - ./381706-1_Bezruchko
+  - ./Vector/Vector
+  - ./VectorTest/VectorTest
 notifications:
   email: false
