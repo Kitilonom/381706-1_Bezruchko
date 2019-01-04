@@ -5,6 +5,6 @@ using namespace std;
 
 int main()
 {
-	cout << "An example of using the Stack will be implemented here" << endl;
+	cout << "Hello world!" << endl;
 	return 0;
 }
