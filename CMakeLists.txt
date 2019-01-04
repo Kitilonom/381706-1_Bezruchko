@@ -3,6 +3,8 @@
 set(PROJECT_NAME 381706-1_Bezruchko) #Создаем обычную локальную переменную с именем проекта
 project(${PROJECT_NAME}) # Название проекта
 
+set(ost ost)
+
 set(Vector Vector) #Переменная с именем библиотеки
 set(VectorLib VectorLib)
 set(VectorTest VectorTest)
@@ -40,6 +42,9 @@ add_subdirectory(gtest)
 add_subdirectory(Vector)
 add_subdirectory(VectorLib)
 add_subdirectory(VectorTest)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ost)
+add_subdirectory(ost)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/StackLib)
 add_subdirectory(Stack)

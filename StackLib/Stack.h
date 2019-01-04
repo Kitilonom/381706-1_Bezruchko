@@ -1,14 +1,11 @@
 #pragma once
 #include <iostream>
+#include "ost.h"
+
+using namespace std;
 
 // стек представлен на односв€зном списке. простите :)
 // структура —“≈  - LIFO (англ. last in Ч first out, Ђпоследним пришЄл Ч первым вышелї).
-
-template <class T>
-struct _Elem {
-	T data; // значение €чейки
-	_Elem* next; // указатель на следующую €чейку
-};
 
 template <class T>
 class _Stack {
