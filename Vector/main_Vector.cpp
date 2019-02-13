@@ -5,6 +5,6 @@ using namespace std;
 
 int main()
 {
-	cout << "An example of using the Vector will be implemented here" << endl;
+	cout << "Vector ok" << endl;
 	return 0;
 }
