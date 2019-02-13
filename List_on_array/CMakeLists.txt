@@ -2,4 +2,4 @@
 file(GLOB srcs "*.cpp")#Добавляем в переменную srcs все файлы с расширением .h
 
 add_executable(${List_on_array} ${srcs} ${hdrs})
-target_link_libraries(${List_on_array} ${List_on_array})
+target_link_libraries(${List_on_array} ${List_on_arraLib})
