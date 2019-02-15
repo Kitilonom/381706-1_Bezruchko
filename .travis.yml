@@ -13,7 +13,7 @@ script:
   - ./QueueTest/QueueTest
   - ./List_on_selectionTest/List_on_selectionTest
   - ./List_on_arrayTest/List_on_arrayTest
-  - ./MultistackTest/MultistackTest
+  # - ./MultistackTest/MultistackTest
   - ./PolynomTest/PolynomTest
   - ./StackTest/StackTest
   - ./PolishTest/PolishTest
