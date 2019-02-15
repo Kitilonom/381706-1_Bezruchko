@@ -4,86 +4,115 @@
 
 using namespace std;
 
-// структура СТЕК - LIFO (англ. last in — first out, «последним пришёл — первым вышел»).
+#include <iomanip> // для setw
 
-template <class T>
-class _Stack {
-	_Elem* top;		// указатель на вершину
-	const unsigned max_size; // максимальный размер стека
-	unsigned now_size; // размер стека в данный момент времени
-
+template <typename T>
+class _Stack
+{
+private:
+	T *stackPtr;                      // указатель на стек
+	const int size;                   // максимальное количество элементов в стеке
+	int top;                          // номер текущего элемента стека
 public:
-	_Stack(unsigned _max_size = 0);	// конструктор по умолчанию	
-	~_Stack();
-	void push(T elem);	// кладем новую переменную в стек
-	T pull(); // достаем элемент с вершиины
-	bool is_empty(); // пуст ==  true
-	friend ofstream& operator<< (ofstream& ostr, _Stack& St); // перегрузка вывода
+	_Stack(int = 10);                  // по умолчанию размер стека равен 10 элементам
+	_Stack(const _Stack<T> &);          // конструктор копирования
+	~_Stack();                         // деструктор
+
+	inline void push(const T &);     // поместить элемент в вершину стека
+	inline T pop();                   // удалить элемент из вершины стека и вернуть его
+	inline void printStack();         // вывод стека на экран
+	inline const T &Peek(int) const; // n-й элемент от вершины стека
+	inline int getStackSize() const;  // получить размер стека
+	inline T *getPtr() const;         // получить указатель на стек
+	inline int getTop() const;        // получить номер текущего элемента в стеке
 };
 
-template <class T> // конструктор по умолчанию	
-_Stack<T>::_Stack(unsigned _max_size = 0)
+// реализация методов шаблона класса STack
+
+// конструктор Стека
+template <typename T>
+_Stack<T>::_Stack(int maxSize) :
+	size(maxSize) // инициализация константы
 {
-	if (_max_size == 0) throw 1;
-	top = NULL;
-	max_size = _max_size;
-	now_size = 0;
+	if (maxSize <= 0) throw - 1;
+	stackPtr = new T[size]; // выделить память под стек
+	top = 0; // инициализируем текущий элемент нулем;
 }
 
-template <class T> // деструкторо
-_Stack<T> ::~_Stack()
+// конструктор копирования
+template <typename T>
+_Stack<T>::_Stack(const _Stack<T> & otherStack) :
+	size(otherStack.getStackSize()) // инициализация константы
 {
-	_Elem* tmp = top;
-	while (tmp != NULL)
-	{
-		tmp->top->next; // запись адреса след адреса
-		delete top; // удаление ячейки
-		top = tmp; // сдвиг на след адрес
-	}
+	stackPtr = new T[size]; // выделить память под новый стек
+	top = otherStack.getTop();
+
+	for (int ix = 0; ix < top; ix++)
+		stackPtr[ix] = otherStack.getPtr()[ix];
 }
 
-template <class T> // кладем новую переменную в стек
-void _Stack<T>::push(T elem)
+// функция деструктора Стека
+template <typename T>
+_Stack<T>::~_Stack()
 {
-	if (++now_size >= max_size) throw 2;
-	_Elem *em = mew _Elem(); // создаем ячейку
-	em->data = elem; // записываем переменную в ячейку
-	if (now_size == 1) // если стек пуст был, то
-		*top = em; // вершиной будет наша ячейка новая
-	else // иначе 
-	{
-		em->next = *top; // теперь следующий после нашего элемента будет бывшая вершина
-		*top = em; // а вершиной - наш элемент
-	}
+	delete[] stackPtr; // удаляем стек
 }
 
-template <class T> // достаем элемент с вершиины
-T _Stack<T>::pull()
+// функция добавления элемента в стек
+template <typename T>
+void _Stack<T>::push(const T &value)
 {
-	if (now_size == 0) throw 3;	// если пуст, то нельзя что-то взять
-	T t = top->data;
-	_Elem* tmp = *top; // сохраняем во временную адрес вершины
-	*top = top->next; // ставим на вершину следующую
-	delete tmp; // удаляем бывшую вершину
-	now_size--; // уменьшаем размер на единицу
-	return t;
+	// проверяем размер стека
+	if (top >= size) throw - 1; // номер текущего элемента должен быть меньше размера стека
+
+	stackPtr[top++] = value; // помещаем элемент в стек
 }
 
-template <class T> // пуст ==  true
-bool _Stack<T>::is_empty()
+// функция удаления элемента из стека
+template <typename T>
+T _Stack<T>::pop()
 {
-	if (now_size == 0) true;
-	return false;
+	// проверяем размер стека
+	if (top <= 0) throw - 1; // номер текущего элемента должен быть больше 0
+
+	return stackPtr[--top]; // удаляем элемент из стека
 }
 
-template <class T> // перегрузка вывода
-ofstream& operator<< (ofstream& ostr, _Stack<T>& St)
+// функция возвращает n-й элемент от вершины стека
+template <class T>
+const T &_Stack<T>::Peek(int nom) const
 {
-	_Elem* em = St.top;
-	while (em)
-	{
-		ostr << em->data;
-		em = em->next;
-	}
-	return ostr;
+	//
+	if (nom > top) throw - 1;
+
+	return stackPtr[top - nom]; // вернуть n-й элемент стека
+}
+
+// вывод стека на экран
+template <typename T>
+void _Stack<T>::printStack()
+{
+	for (int ix = top - 1; ix >= 0; ix--)
+		cout << "|" << setw(4) << stackPtr[ix] << endl;
+}
+
+// вернуть размер стека
+template <typename T>
+int _Stack<T>::getStackSize() const
+{
+	return size;
+}
+
+// вернуть указатель на стек (для конструктора копирования)
+template <typename T>
+T *_Stack<T>::getPtr() const
+{
+	return stackPtr;
+}
+
+// вернуть размер стека
+template <typename T>
+int _Stack<T>::getTop() const
+{
+	return top;
 }
