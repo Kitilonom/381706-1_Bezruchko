@@ -4,12 +4,12 @@
 
 using namespace std;
 
-template <typename T> class list
+template <typename T> class list_on_selection
 {
 private:
 	class node //Класс node содержит данные списка
 	{
-		friend class list<T>;
+	friend class list_on_selection<T>;
 	private:
 		node *next; //Указатель на следующий элемент в списке
 		T val; //Данные списка
@@ -21,17 +21,20 @@ private:
 	node *head; //Указатель на начало списка
 	int count; //Количество элементов в списке
 public:
-	list() : head(NULL), count(0) {}
-	~list()
+	list_on_selection() : head(NULL), count(0) {}
+	~list_on_selection()
 	{
 		clear(); //Функция освобождает память, используемую для хранения списка
 	}
-	int getCount() const //Возвращает количество элементов в списке
+
+	//Возвращает количество элементов в списке
+	int getCount() const 
 	{
 		return count;
 	}
 
-	int add(T data)//Добавление элемента в конец списка. Возвращает количество элементов в списке
+	//Добавление элемента в конец списка.
+	void add(T data)
 	{
 		node *to_add = new node;
 		to_add->next = NULL;
@@ -45,12 +48,13 @@ public:
 			current->next = to_add;
 		}
 		count++;
-		return count;
 	}
 
-	int del(int x) //Удаление элемента из списка. Возвращает количество элементов в списке. 
-	{			   //Возвращает -1, если произошла ошибка
-		if (x > count) return -1;
+	//Удаление элемента из списка. Возвращает количество элементов в списке. 
+	//Возвращает -1, если произошла ошибка
+	int del(int x) 
+	{
+		if (x > count) throw -1;
 		node *to_del = head;
 		if (x == 1) //Если нужно удалить первый элемент
 		{
@@ -70,7 +74,8 @@ public:
 		return count;
 	}
 
-	void clear() //Очистка списка
+	//Очистка списка
+	void clear() 
 	{
 		node *current = head;
 		node *to_del = head;
@@ -84,7 +89,8 @@ public:
 		count = 0;
 	}
 
-	T getData(int x) const //Возвращает данные из списка.
+	//Возвращает данные из списка.
+	T getData(int x) const 
 	{
 		node *current;
 		for (current = head; x > 1; x--)
