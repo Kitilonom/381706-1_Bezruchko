@@ -21,7 +21,7 @@ public:
 
 	unsigned int GetDeg(); //функция получения степени полинома
 	double GetKoef(unsigned int); //функция получения коэффициента при i-й степени
-	unsigned int SetKoef(double, unsigned int); //функция задания коэффициента при i-й 
+	void SetKoef(double, unsigned int); //функция задания коэффициента при i-й 
 												//степени, возвращает степень полинома
 	Polynom operator + (const Polynom &);   //оператор сложения двух полиномов
 	Polynom operator = (const Polynom &);   //оператор присваивания
@@ -81,11 +81,10 @@ double Polynom::GetKoef(unsigned int i) {
 }
 
 // функция задания коэффициента при i-й степени
-unsigned int Polynom::SetKoef(double new_koef, unsigned int i) {
+void Polynom::SetKoef(double new_koef, unsigned int i) {
 	if (i <= deg) koef[i] = new_koef;
-	else return deg;
+	else throw - 1;
 	CorrectDeg();
-	return deg;
 }
 
 //оператор сложения двух полиномов

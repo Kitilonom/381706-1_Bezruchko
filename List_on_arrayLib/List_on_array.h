@@ -25,8 +25,8 @@ public:
 	void pushStart(T elem); // положить в начало
 	void pushEnd(T elem); // положить в конец
 	T pull(int n); // взять произвольный
-	T pullStart(int n); // взять первый
-	T pullEnd(int n); // взять последний
+	T pullStart(); // взять первый
+	T pullEnd(); // взять последний
 
 	bool IsEmpty(); // если пустой, то true
 
@@ -35,7 +35,7 @@ public:
 
 // конструктор
 template<class T>
-inline List_on_array<T>::List_on_array(int _size_List)
+ List_on_array<T>::List_on_array(int _size_List)
 {
 	if (_size_List <= 0) throw -1; // ошибка, если размер меньше или равен 0
 	size_List = _size_List; // размер в размер
@@ -45,8 +45,8 @@ inline List_on_array<T>::List_on_array(int _size_List)
 
 	// инициализация массивов
 	Elems = new T[size_List]; 
-	nextElem = new unsigned[size_List];
-	predElem = new unsigned[size_List];
+	nextElem = new int[size_List];
+	predElem = new int[size_List];
 
 	// пробегаемся по массивам и говорим, что у нас вообще ничего нет!
 	for (int i = 0; i < size_List; i++)
@@ -59,7 +59,7 @@ inline List_on_array<T>::List_on_array(int _size_List)
 
 // конструктор копирования
 template<class T>
-inline List_on_array<T>::List_on_array(List_on_array<T>& L)
+List_on_array<T>::List_on_array(List_on_array<T>& L)
 {
 	// пересоздаем массивы
 	Elems = new T[L.size_List];
@@ -79,7 +79,7 @@ inline List_on_array<T>::List_on_array(List_on_array<T>& L)
 }
 
 template<class T>
-inline List_on_array<T>::~List_on_array()
+ List_on_array<T>::~List_on_array()
 {
 	// просто все удаляем :)
 	delete[]Elems;
@@ -88,17 +88,17 @@ inline List_on_array<T>::~List_on_array()
 }
 
 template<class T>
-inline void List_on_array<T>::push(int n, T elem)
+ void List_on_array<T>::push(int n, T elem)
 {
-	if (count == size) throw - 1; // если он уже заполнен, то сорян, ничего не получится
-	if (n <= 0 || n > count - 1) throw - 1; //  или если за диапазон выползает, то тоже не прокатит
+	if (count_Elem == size_List) throw - 1; // если он уже заполнен, то сорян, ничего не получится
+	if (n <= 0 || n > count_Elem - 1) throw - 1; //  или если за диапазон выползает, то тоже не прокатит
 	int tmp = freeMesto.front(); // вытаскиваем свободное место
 	freeMesto.pop(); // и удаляем его из очереди
 	Elems[tmp] = elem; // в это свободное место добавляем элемент
 	count_Elem++; // теперь элементов стало больше
 
 	int tmppred = start;
-	int tmpnext = nextElem[tmpstart];
+	int tmpnext = nextElem[start];
 	// находим последний свободный
 	for (int i = 0; i < n-1; i++)
 	{
@@ -106,8 +106,8 @@ inline void List_on_array<T>::push(int n, T elem)
 		tmpnext = nextElem[i];
 	}
 	// перезаписываем следующие элементы
-	nextInd[tmp] = tmpnext;
-	nextInd[pred] = tmppred;
+	nextElem[tmp] = tmpnext;
+	nextElem[tmppred] = tmppred;
 	// перезаписываем предыдущие элементы
 	predElem[tmp] = tmppred;
 	predElem[tmpnext] = tmp;
@@ -115,13 +115,13 @@ inline void List_on_array<T>::push(int n, T elem)
 
 // положить в начало
 template<class T>
-inline void List_on_array<T>::pushStart(T elem)
+void List_on_array<T>::pushStart(T elem)
 {
-	if (count == size) throw - 1; // если он уже заполнен, то сорян, ничего не получится
+	if (count_Elem == size_List) throw - 1; // если он уже заполнен, то сорян, ничего не получится
 	int tmp = freeMesto.front(); // вытаскиваем свободное место
 	freeMesto.pop(); // и удаляем его из очереди
 	Elems[tmp] = elem; // втаскиваем нужный
-	count++; // нас стало больше!
+	count_Elem++; // нас стало больше!
 	// затираем следы 
 	nextElem[tmp] = start;
 	if (start != -1)
@@ -133,13 +133,13 @@ inline void List_on_array<T>::pushStart(T elem)
 
 // положить в конец
 template<class T>
-inline void List_on_array<T>::pushEnd(T elem)
+void List_on_array<T>::pushEnd(T elem)
 {
-	if (count == size) throw - 1; // если он уже заполнен, то сорян, ничего не получится
+	if (count_Elem == size_List) throw - 1; // если он уже заполнен, то сорян, ничего не получится
 	int tmp = freeMesto.front(); // вытаскиваем свободное место
 	freeMesto.pop(); // и удаляем его из очереди
 	Elems[tmp] = elem;
-	count++;
+	count_Elem++;
 	if (end != -1)
 		nextElem[end] = tmp;
 	else
@@ -153,10 +153,10 @@ inline void List_on_array<T>::pushEnd(T elem)
 
 // вытащить какой-то
 template<class T>
-inline T List_on_array<T>::pull(int n)
+T List_on_array<T>::pull(int n)
 {
-	if (count == 0) throw - 1; // если пуст, то косяк
-	if (n <= 0 || n > count - 1) throw - 1; // если за границы - тоже косяк
+	if (count_Elem == 0) throw - 1; // если пуст, то косяк
+	if (n <= 0 || n > count_Elem - 1) throw - 1; // если за границы - тоже косяк
 	T tmp;
 	int tmpindex = start;
 	// доходим до n 
@@ -175,11 +175,11 @@ inline T List_on_array<T>::pull(int n)
 
 // вытащить с начала
 template<class T>
-inline T List_on_array<T>::pullStart(int n)
+T List_on_array<T>::pullStart()
 {
-	if (count == 0) throw - 1;
+	if (count_Elem == 0) throw - 1;
 	T tmp = Elems[start];
-	count--;
+	count_Elem--;
 	freeMesto.push(start);
 	int tmpstart = nextElem[start];
 	predElem[start] = -2;
@@ -192,11 +192,11 @@ inline T List_on_array<T>::pullStart(int n)
 
 // вытащить с конца
 template<class T>
-inline T List_on_array<T>::pullEnd(int n)
+T List_on_array<T>::pullEnd()
 {
-	if (count == 0) throw - 1;
+	if (count_Elem == 0) throw - 1;
 	T tmp = Elems[end];
-	count--;
+	count_Elem--;
 	freeMesto.push(end);
 	int tmpindex = predElem[end];
 	predElem[end] = -2;
@@ -211,7 +211,7 @@ inline T List_on_array<T>::pullEnd(int n)
 
 // если пуст = true
 template<class T>
-inline bool List_on_array<T>::IsEmpty()
+bool List_on_array<T>::IsEmpty()
 {
 	if (count == 0)
 		return true;
