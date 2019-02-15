@@ -4,91 +4,124 @@
 
 using namespace std;
 
-template <class T>
-class _Queue {
-	_Elem* head, *end; // указатели на начало и конец очереди
-	const unsigned max_size; // максимальный размер стека
-	unsigned now_size; // размер стека в данный момент времени
-
+template<typename T>
+class Queue
+{
+private:
+	T *queuePtr;     // указатель на очередь
+	const int size;  // максимальное количество элементов в очереди
+	int begin,       // начало очереди
+		end;         // конец очереди
+	int elemCT;      // счетчик элементов
 public:
-	_Queue(unsigned _max_size = 0);	// конструктор по умолчанию	
-	~_Queue();
-	void push(T elem);	// кладем новую переменную в конец
-	T pull(); // достаем элемент с начала
-	bool is_empty(); // пуст ==  true
-	friend ofstream& operator<< (ofstream& ostr, _Queue& Qu); // перегрузка вывода
+	Queue(int = 10);          // конструктор по умолчанию
+	Queue(const Queue<T> &); // конструктор копирования
+	~Queue();                // деструктор
 
+	void enqueue(const T &); // добавить элемент в очередь
+	T dequeue(); // удалить элемент из очереди
+	void printQueue();
+	int getelemCT(); // показать счетчик
+	int getsize();
+	bool IsEmpty(); // пустая = правда
 };
- 
 
-template <class T> // конструктор по умолчанию	
-_Queue<T>::_Queue(unsigned _max_size = 0)
+// реализация методов шаблона класса Queue
+
+// конструктор по умолчанию
+template<typename T>
+Queue<T>::Queue(int sizeQueue) :
+	size(sizeQueue), // инициализация константы
+	begin(0), end(0), elemCT(0)
 {
-	if (_max_size == 0) throw 1;
-	head = NULL;
-	end = NULL;
-	max_size = _max_size;
-	now_size = 0;
+	if (sizeQueue <= 0) throw - 1;
+	// дополнительная позици поможет нам различать конец и начало очереди
+	queuePtr = new T[size + 1];
 }
 
-template <class T>
-_Queue<T>::~_Queue()
+// конструктор копии
+template<typename T>
+Queue<T>::Queue(const Queue &otherQueue) :
+	size(otherQueue.size), begin(otherQueue.begin),
+	end(otherQueue.end), elemCT(otherQueue.elemCT),
+	queuePtr(new T[size + 1])
 {
-	_Elem* tmp = head;
-	while (tmp != NULL)
-	{
-		tmp->head->next; // запись адреса след адреса
-		delete head; // удаление ячейки
-		head = tmp; // сдвиг на след адрес
-	}
+	for (int ix = 0; ix < size; ix++)
+		queuePtr[ix] = otherQueue.queuePtr[ix]; // копируем очередь
 }
 
-template <class T> // кладем новую переменную в конец
-void _Queue<T>::push(T elem)
+// деструктор класса Queue
+template<typename T>
+Queue<T>::~Queue()
 {
-	if (++now_size >= max_size) throw 2;
-	_Elem* em = new _Elem;
-	em->data = elem;
-	em->next = NULL;
-	if (head == NULL)
-	{
-		head = end = em;
-	}
+	delete[] queuePtr;
+}
+
+// функция добавления элемента в очередь
+template<typename T>
+void Queue<T>::enqueue(const T &newElem)
+{
+	// проверяем, ести ли свободное место в очереди
+	if (elemCT >= size) throw 1;
+
+	// обратить внимание на то, что очередь начинает заполняться с 0 индекса
+	queuePtr[end++] = newElem;
+
+	elemCT++;
+
+	// проверка кругового заполнения очереди
+	if (end > size)
+		end -= size + 1; // возвращаем end на начало очереди
+}
+
+// функция удаления элемента из очереди
+template<typename T>
+T Queue<T>::dequeue()
+{
+	// проверяем, есть ли в очереди элементы
+	if (elemCT <= 0) throw - 1;
+
+	T returnValue = queuePtr[begin++];
+	elemCT--;
+
+	// проверка кругового заполнения очереди
+	if (begin > size)
+		begin -= size + 1; // возвращаем behin на начало очереди
+
+	return returnValue;
+}
+
+template<typename T>
+void Queue<T>::printQueue()
+{
+	cout << "Очередь: ";
+
+	if (end == 0 && begin == 0)
+		cout << " пустая\n";
 	else
 	{
-		end->next = em;
-		end = em;
+		for (int ix = end; ix >= begin; ix--)
+			cout << queuePtr[ix] << " ";
+		cout << endl;
 	}
 }
- 
-template <class T> // достаем элемент с начала
-T _Queue<T>::pull()
+
+template<typename T>
+inline int Queue<T>::getelemCT()
 {
-	if (now_size == 0) throw 3;
-	T t = head->data;
-	_Elem em = head;
-	head = head->next;
-	delete em;
-	return t;
+	return elemCT;
 }
 
-template <class T> // пуст ==  true
-bool _Queue<T>::is_empty()
+template<typename T>
+inline int Queue<T>::getsize()
 {
-	if (now_size == 0)
+	return size;
+}
+
+template<typename T>
+inline bool Queue<T>::IsEmpty()
+{
+	if (elemCT == 0)
 		return true;
 	return false;
 }
-
-template <class T> // перегрузка вывода
-ofstream& operator<< (ofstream& ostr, _Queue<T>& Qu)
-{
-	_Elem* em = head;
-	while (em != NULL)
-	{
-		ostr << em->data;
-		em = em->next;
-	}
-	return ostr;
-}
-
