@@ -13,6 +13,7 @@ public:
 	Polish() : isOk(true) {};
 	void Read();
 	void Print();
+	bool _isOK();
 };
 
 
@@ -62,9 +63,14 @@ void Polish::Read()
 	} while (isOk);
 }
 
-inline void Polish::Print()
+void Polish::Print()
 {
 	cout << stk.top() << endl;
 }
 
 
+bool Polish::_isOK()
+{
+	if (isOk) return true;
+	return false;
+}
