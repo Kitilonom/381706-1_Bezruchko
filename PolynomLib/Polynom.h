@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
 #include "ost.h"
-#include <memory.h>
+//#include <memory.h>
 using namespace std;
+
 
 
 class Polynom {
@@ -16,7 +17,7 @@ private:
 public:
 	Polynom(); //конструктор без параметров
 	Polynom(unsigned int, double*); //конструктор с параметрами
-	Polynom(const Polynom &); //копирующий контсруктор
+	Polynom(Polynom &f); //копирующий контсруктор
 	Polynom::~Polynom(); //деструктор
 
 	unsigned int GetDeg(); //функция получения степени полинома
@@ -56,7 +57,7 @@ Polynom::Polynom(unsigned int new_deg, double *new_koef) {
 }
 
 //копирующий конструктор
-Polynom::Polynom(const Polynom &f) {
+Polynom::Polynom(Polynom &f) {
 	deg = f.deg;
 	koef = new double[deg + 1];
 	for (int i = 0; i <= deg; i++)
