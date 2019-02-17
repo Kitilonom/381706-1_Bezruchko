@@ -10,8 +10,9 @@ class Multistack {
 	stack<T>* st;
 	int n;
 	int maxsize;
-	int count;
+	
 public:
+	int count;
 	Multistack(int _n = 0, int _size = 0);
 	
 	int getsize();
@@ -24,7 +25,7 @@ public:
 };
 
 template<class T>
-inline Multistack<T>::Multistack(int _n, int _size)
+Multistack<T>::Multistack(int _n, int _size)
 {
 	if (_n <= 0) throw - 1;
 	if (_size <= 0) throw - 1;
@@ -35,25 +36,35 @@ inline Multistack<T>::Multistack(int _n, int _size)
 }
 
 template<class T>
-inline int Multistack<T>::getsize()
+int Multistack<T>::getsize()
 {
 	return maxsize;
 }
 
 template<class T>
-inline int Multistack<T>::getn()
+int Multistack<T>::getn()
 {
 	return n;
 }
 
 template<class T>
-inline T Multistack<T>::pull(int _n)
+T Multistack<T>::pull(int _n)
 {
-	return st[_n]->push();
+	count--;
+	T t = st[_n]->pop();
+	return t;
 }
 
 template<class T>
-inline void Multistack<T>::push(T elem, int _n)
+void Multistack<T>::push(T elem, int _n)
 {
-	st[_n]->push(elem);
+	count++;
+	st[_n].push(elem);
+}
+
+template<class T>
+bool Multistack<T>::IsEmpty()
+{
+	
+	return false;
 }
