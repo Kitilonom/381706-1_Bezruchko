@@ -1,7 +1,5 @@
 #pragma once
 #include <iostream>
-#include "ost.h"
-//#include <memory.h>
 using namespace std;
 
 
