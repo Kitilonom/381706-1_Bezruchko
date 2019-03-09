@@ -8,7 +8,15 @@ before_script:
 script:
   - cmake ../381706-1_Bezruchko
   - make -j
-  - cd ./bin/
-  - ./381706-1_Bezruchko
+  - ./VectorTest/VectorTest
+  - ./Stack_on_listTest/Stack_on_listTest
+  - ./QueueTest/QueueTest
+  - ./List_on_selectionTest/List_on_selectionTest
+  - ./List_on_arrayTest/List_on_arrayTest
+  # - ./MultistackTest/MultistackTest
+  - ./PolynomTest/PolynomTest
+  - ./StackTest/StackTest
+  - ./PolishTest/PolishTest
+  
 notifications:
   email: false
